@@ -14,13 +14,14 @@ phases:
       - echo "Listing directory contents"
       - echo $(pwd) && ls -lah **
       - echo "Building the Docker image..."
-      - docker build -t ${IAMGE} .
+      - docker build -t container_image  .
+      - docker tag ${IMAGE} container_image:latest  
   post_build:
     commands:
       - 'echo "{\"image\": \"$IMAGE\"}" > deploy.json'
       - echo Build completed on `date +'%s'`
       - echo "Pushing the Docker image..."
-      - docker push $IMAGE
+      - docker push ${IMAGE}
 artifacts:
   files:
     - deploy.json
