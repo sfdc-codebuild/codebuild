@@ -15,11 +15,11 @@ phases:
       - echo $(pwd) && ls -lah **
       - echo "Building the Docker image..."
       - docker build -t container_image  .
-      - docker tag container_image:latest  ${IMAGE}
+      - docker tag container_image:latest  ${IMAGE}:latest
       - docker image ls
   post_build:
     commands:
-      - printf '[{"name":"demo-apps","imageUri":"%s"}]' ${IMAGE} > imagedefinitions.json
+      - printf '[{"name":"%s","imageUri":"%s"}]' ${IMAGE_REPO_NAME} ${IMAGE}:latest > imagedefinitions.json
       - 'echo "{\"image\": \"$IMAGE\"}" > deploy.json'
       - echo Build completed on `date +'%s'`
       - echo "Pushing the Docker image..."
