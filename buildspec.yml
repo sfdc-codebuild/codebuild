@@ -1,0 +1,25 @@
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      - echo "Logging into ECR repository"
+      - echo "$CODEBUILD_RESOLVED_SOURCE_VERSION" > git_hash
+      - $(aws ecr get-login --no-include-email --region ${AWS_REGION})
+      - export IMAGE_TAG=$(cat git_hash)
+      - export IMAGE="${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${IMAGE_REPO_NAME}"
+  build:
+    commands:
+      - echo "Listing directory contents"
+      - echo $(pwd) && ls -lah **
+      - echo "Building the Docker image..."
+      - docker build -t $IAMGE .
+  post_build:
+    commands:
+      - 'echo "{\"image\": \"$IMAGE\"}" > deploy.json'
+      - echo Build completed on `date +'%s'`
+      - echo "Pushing the Docker image..."
+      - docker push $IMAGE
+artifacts:
+  files:
+    - deploy.json
