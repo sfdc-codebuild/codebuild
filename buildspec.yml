@@ -19,7 +19,7 @@ phases:
       - docker image ls
   post_build:
     commands:
-      - printf '[{"name":"${IMAGE_REPO_NAME}","imageUri":"%s"}]' ${IMAGE} > imagedefinitions.json
+      - printf '[{"name":"demo-apps","imageUri":"%s"}]' ${IMAGE} > imagedefinitions.json
       - 'echo "{\"image\": \"$IMAGE\"}" > deploy.json'
       - echo Build completed on `date +'%s'`
       - echo "Pushing the Docker image..."
